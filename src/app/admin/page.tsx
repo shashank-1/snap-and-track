@@ -12,15 +12,12 @@ import {
   UserPlus, 
   Shield, 
   Key, 
-  Edit, 
   Trash2, 
   Search,
-  Settings,
   Eye,
   EyeOff,
   CheckCircle,
   XCircle,
-  AlertTriangle,
   Camera,
   FileText
 } from 'lucide-react';

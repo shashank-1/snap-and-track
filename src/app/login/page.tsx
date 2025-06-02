@@ -4,8 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Card, CardContent } from '@/components/ui/card';
-import { Camera, Mail, Lock, Shield, Check, Heart, Sparkles, Phone, X, User } from 'lucide-react';
+import { Camera, Mail, Shield, Check, Heart, Sparkles, Phone, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 export default function LoginPage() {
@@ -173,25 +172,7 @@ export default function LoginPage() {
       
       router.push('/');
       setIsLoading(false);
-    }, 1000);
-  };
-
-  const handleQuickCreateAccount = () => {
-    // Quick account creation for the main button
-    localStorage.setItem('home-care-auth', JSON.stringify({
-      isAuthenticated: true,
-      user: {
-        email: 'newuser@homecare.app',
-        name: 'New User',
-        role: 'user',
-        loginTime: new Date().toISOString()
-      }
-    }));
-    
-    localStorage.setItem("isLoggedIn", "true");
-    localStorage.setItem("userEmail", 'newuser@homecare.app');
-    
-    router.push('/');
+    }, 1200);
   };
 
   const handleGuestLogin = () => {
@@ -427,7 +408,7 @@ export default function LoginPage() {
                   </form>
 
                   <div className="mt-6 text-center">
-                    <span className="text-gray-600">Don't have an account? </span>
+                    <span className="text-gray-600">Don&apos;t have an account? </span>
                     <button
                       onClick={() => {
                         setShowLoginForm(false);

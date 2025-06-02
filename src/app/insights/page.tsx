@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { Home, User, LogOut, Bell, Target, Activity, BarChart3, Construction, ListChecks } from "lucide-react";
+import { Home, User, LogOut, Bell, Construction, ListChecks } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 
