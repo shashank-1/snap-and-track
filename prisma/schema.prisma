@@ -1,0 +1,154 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  name          String
+  image         String?
+  emailVerified DateTime?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  // Relations
+  homeSystems      HomeSystem[]
+  tasks            Task[]
+  serviceProviders ServiceProvider[]
+  budgetSettings   BudgetSettings?
+
+  // NextAuth relations
+  accounts Account[]
+  sessions Session[]
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+model HomeSystem {
+  id            String    @id @default(cuid())
+  name          String
+  category      String
+  roomLocation  String    @default("general")
+  description   String?
+  installDate   DateTime?
+  warrantyEnd   DateTime?
+  condition     String    @default("good") // good, fair, poor, excellent
+  userId        String
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  // Relations
+  user  User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tasks Task[]
+
+  @@index([userId])
+  @@index([category])
+  @@index([roomLocation])
+}
+
+model Task {
+  id             String    @id @default(cuid())
+  title          String
+  description    String?
+  category       String
+  roomLocation   String    @default("general")
+  frequencyDays  Int?      // How often task should be repeated (in days)
+  dueDate        DateTime
+  completedDate  DateTime?
+  status         String    @default("pending") // pending, in_progress, completed, overdue
+  estimatedCost  Float     @default(0)
+  actualCost     Float?
+  priority       String    @default("medium") // low, medium, high
+  userId         String
+  homeSystemId   String?
+  providerId     String?
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  // Relations
+  user         User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  homeSystem   HomeSystem?      @relation(fields: [homeSystemId], references: [id])
+  provider     ServiceProvider? @relation(fields: [providerId], references: [id])
+
+  @@index([userId])
+  @@index([status])
+  @@index([dueDate])
+  @@index([category])
+  @@index([roomLocation])
+}
+
+model ServiceProvider {
+  id           String    @id @default(cuid())
+  name         String
+  contactPhone String?
+  contactEmail String?
+  website      String?
+  serviceType  String
+  tags         String?   // JSON string of tags
+  rating       Int       @default(0) // 0-5 stars
+  notes        String?
+  lastUsed     DateTime?
+  userId       String
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  // Relations
+  user  User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tasks Task[]
+
+  @@index([userId])
+  @@index([serviceType])
+}
+
+model BudgetSettings {
+  id                   String  @id @default(cuid())
+  userId               String  @unique
+  autoApprovalLimit    Float   @default(50.0)
+  monthlyBudget        Float   @default(800.0)
+  notificationsEnabled Boolean @default(true)
+  weeklyDigest         Boolean @default(true)
+
+  // Relations
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
