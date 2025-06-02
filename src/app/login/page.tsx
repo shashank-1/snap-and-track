@@ -11,6 +11,7 @@ export default function LoginPage() {
   const router = useRouter();
   const [showLoginForm, setShowLoginForm] = useState(false);
   const [showCreateAccountForm, setShowCreateAccountForm] = useState(false);
+  const [currentTagline, setCurrentTagline] = useState(0);
   const [loginFormData, setLoginFormData] = useState({
     email: '',
     password: ''
@@ -24,6 +25,20 @@ export default function LoginPage() {
   });
   const [isLoading, setIsLoading] = useState(false);
   const [isAdminLogin, setIsAdminLogin] = useState(false);
+
+  const taglines = [
+    "Snap it in a second.",
+    "Track it without the hassle."
+  ];
+
+  // Rotate tagline every 3 seconds
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentTagline((prev) => (prev + 1) % taglines.length);
+    }, 3000);
+
+    return () => clearInterval(interval);
+  }, []);
 
   const handleAdminCheckboxChange = (checked: boolean) => {
     setIsAdminLogin(checked);
@@ -187,15 +202,15 @@ export default function LoginPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-orange-50 via-yellow-50 to-green-50 relative">
       {/* Main Content */}
-      <div className="min-h-screen flex flex-col justify-center items-center relative z-10 px-4 py-8">
+      <div className="min-h-screen flex flex-col justify-center items-center relative z-10 px-4 py-6">
         {/* Main Title */}
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, ease: "easeOut" }}
-          className="text-center mb-8"
+          className="text-center mb-6"
         >
-          <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-black text-black tracking-tight leading-none font-sans" style={{ fontWeight: 900 }}>
+          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-black text-black tracking-tight leading-none font-sans" style={{ fontWeight: 900 }}>
             Snap and Track
           </h1>
         </motion.div>
@@ -205,9 +220,9 @@ export default function LoginPage() {
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 1, ease: "easeOut", delay: 0.2 }}
-          className="relative mb-8"
+          className="relative mb-6"
         >
-          <div className="w-64 h-64 sm:w-72 sm:h-72 md:w-80 md:h-80 flex items-center justify-center relative">
+          <div className="w-56 h-56 sm:w-64 sm:h-64 md:w-72 md:h-72 flex items-center justify-center relative">
             <motion.div
               animate={{ 
                 y: [0, -8, 0],
@@ -246,17 +261,23 @@ export default function LoginPage() {
         </motion.div>
 
         {/* Content Section */}
-        <div className="w-full max-w-sm space-y-6">
-          {/* Tagline */}
+        <div className="w-full max-w-sm space-y-5">
+          {/* Rotating Tagline */}
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.4 }}
             className="text-center"
           >
-            <p className="text-lg text-gray-700 leading-relaxed">
-              Snap home issues. We track them for you.
-            </p>
+            <motion.p 
+              key={currentTagline}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+              className="text-base text-gray-600 leading-relaxed"
+            >
+              {taglines[currentTagline]}
+            </motion.p>
           </motion.div>
 
           {/* Primary CTA */}
@@ -313,15 +334,22 @@ export default function LoginPage() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed bottom-0 left-0 right-0 h-[50vh] bg-black/30 z-50 flex items-end justify-center"
+            transition={{ duration: 0.1 }}
+            className="fixed inset-0 z-50 flex items-end justify-center"
             onClick={closeAllModals}
           >
             <motion.div
-              initial={{ y: '100%' }}
-              animate={{ y: 0 }}
-              exit={{ y: '100%' }}
-              transition={{ type: 'spring', damping: 25, stiffness: 300 }}
-              className="w-full max-w-md h-full bg-white rounded-t-3xl shadow-2xl border-t border-l border-r border-gray-100 overflow-hidden"
+              initial={{ y: '100%', opacity: 0.8 }}
+              animate={{ y: 0, opacity: 1 }}
+              exit={{ y: '100%', opacity: 0.8 }}
+              transition={{ 
+                type: 'spring', 
+                damping: 35, 
+                stiffness: 300, 
+                duration: 0.7,
+                exit: { duration: 0.8, ease: "easeInOut" }
+              }}
+              className="w-full max-w-md h-[50vh] bg-white/70 backdrop-blur-xl rounded-t-3xl shadow-2xl border border-white/40 overflow-hidden pointer-events-auto mb-4"
               onClick={(e) => e.stopPropagation()}
             >
               <div className="h-full flex flex-col">
@@ -416,15 +444,22 @@ export default function LoginPage() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed bottom-0 left-0 right-0 h-[50vh] bg-black/30 z-50 flex items-end justify-center"
+            transition={{ duration: 0.1 }}
+            className="fixed inset-0 z-50 flex items-end justify-center"
             onClick={closeAllModals}
           >
             <motion.div
-              initial={{ y: '100%' }}
-              animate={{ y: 0 }}
-              exit={{ y: '100%' }}
-              transition={{ type: 'spring', damping: 25, stiffness: 300 }}
-              className="w-full max-w-md h-full bg-white rounded-t-3xl shadow-2xl border-t border-l border-r border-gray-100 overflow-hidden"
+              initial={{ y: '100%', opacity: 0.8 }}
+              animate={{ y: 0, opacity: 1 }}
+              exit={{ y: '100%', opacity: 0.8 }}
+              transition={{ 
+                type: 'spring', 
+                damping: 35, 
+                stiffness: 300, 
+                duration: 0.7,
+                exit: { duration: 0.8, ease: "easeInOut" }
+              }}
+              className="w-full max-w-md h-[50vh] bg-white/70 backdrop-blur-xl rounded-t-3xl shadow-2xl border border-white/40 overflow-hidden pointer-events-auto mb-4"
               onClick={(e) => e.stopPropagation()}
             >
               <div className="h-full flex flex-col">
