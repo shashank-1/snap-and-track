@@ -4,14 +4,13 @@ import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Camera, Mail, Shield, Check, Heart, Sparkles, Phone, X } from 'lucide-react';
+import { Mail, Shield, Sparkles, Phone, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 export default function LoginPage() {
   const router = useRouter();
   const [showLoginForm, setShowLoginForm] = useState(false);
   const [showCreateAccountForm, setShowCreateAccountForm] = useState(false);
-  const [showFeatureHighlights, setShowFeatureHighlights] = useState(true);
   const [loginFormData, setLoginFormData] = useState({
     email: '',
     password: ''
@@ -185,12 +184,6 @@ export default function LoginPage() {
     setShowCreateAccountForm(false);
   };
 
-  const featureHighlights = [
-    { icon: Camera, text: "Snap photos to log issues" },
-    { icon: Check, text: "Get auto-reminders" },
-    { icon: Heart, text: "Free forever (for now)" }
-  ];
-
   return (
     <div className="min-h-screen bg-gradient-to-br from-orange-50 via-yellow-50 to-green-50 relative">
       {/* Main Content */}
@@ -278,7 +271,6 @@ export default function LoginPage() {
               className="w-full bg-blue-600 hover:bg-blue-700 text-white rounded-xl py-4 text-lg font-semibold shadow-lg transition-all duration-200 active:scale-95"
               disabled={isLoading}
             >
-              <Heart className="w-5 h-5 mr-2" />
               Create an Account
             </Button>
           </motion.div>
@@ -556,39 +548,6 @@ export default function LoginPage() {
           </motion.div>
         )}
       </AnimatePresence>
-
-      {/* Permanent Feature Highlights */}
-      {showFeatureHighlights && (
-        <motion.div 
-          className="fixed bottom-6 left-1/2 transform -translate-x-1/2 z-30"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.8 }}
-        >
-          <div className="flex items-center space-x-4">
-            {featureHighlights.map((feature, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ 
-                  duration: 0.3, 
-                  delay: 0.9 + (index * 0.1),
-                  ease: "easeOut"
-                }}
-                className="bg-white/60 backdrop-blur-sm rounded-full px-3 py-2 shadow-sm border border-gray-200/50"
-              >
-                <div className="flex items-center space-x-2">
-                  <div className="w-4 h-4 bg-gradient-to-br from-orange-100 to-yellow-100 rounded-full flex items-center justify-center flex-shrink-0">
-                    <feature.icon className="w-2 h-2 text-orange-600" />
-                  </div>
-                  <span className="text-gray-600 font-medium text-xs">{feature.text}</span>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-        </motion.div>
-      )}
     </div>
   );
 } 
