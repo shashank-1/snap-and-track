@@ -26,15 +26,6 @@ export default function LoginPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [isAdminLogin, setIsAdminLogin] = useState(false);
 
-  // Auto-hide feature highlights after 4 seconds
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setShowFeatureHighlights(false);
-    }, 4000);
-
-    return () => clearTimeout(timer);
-  }, []);
-
   const handleAdminCheckboxChange = (checked: boolean) => {
     setIsAdminLogin(checked);
     
@@ -566,42 +557,38 @@ export default function LoginPage() {
         )}
       </AnimatePresence>
 
-      {/* Ephemeral Feature Highlights */}
-      <AnimatePresence>
-        {showFeatureHighlights && (
-          <motion.div 
-            className="fixed bottom-4 left-4 right-4 z-40"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.3 }}
-          >
-            <div className="space-y-2">
-              {featureHighlights.map((feature, index) => (
-                <motion.div
-                  key={index}
-                  initial={{ y: 50, opacity: 0 }}
-                  animate={{ y: 0, opacity: 1 }}
-                  exit={{ y: 50, opacity: 0 }}
-                  transition={{ 
-                    duration: 0.4, 
-                    delay: index * 0.1,
-                    ease: "easeOut"
-                  }}
-                  className="bg-white/95 backdrop-blur-sm rounded-xl px-4 py-3 shadow-lg border border-gray-100"
-                >
-                  <div className="flex items-center space-x-3">
-                    <div className="w-6 h-6 bg-gradient-to-br from-orange-100 to-yellow-100 rounded-full flex items-center justify-center flex-shrink-0">
-                      <feature.icon className="w-3 h-3 text-orange-600" />
-                    </div>
-                    <span className="text-gray-700 font-medium text-sm">{feature.text}</span>
+      {/* Permanent Feature Highlights */}
+      {showFeatureHighlights && (
+        <motion.div 
+          className="fixed bottom-6 left-1/2 transform -translate-x-1/2 z-30"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.8 }}
+        >
+          <div className="flex items-center space-x-4">
+            {featureHighlights.map((feature, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ 
+                  duration: 0.3, 
+                  delay: 0.9 + (index * 0.1),
+                  ease: "easeOut"
+                }}
+                className="bg-white/60 backdrop-blur-sm rounded-full px-3 py-2 shadow-sm border border-gray-200/50"
+              >
+                <div className="flex items-center space-x-2">
+                  <div className="w-4 h-4 bg-gradient-to-br from-orange-100 to-yellow-100 rounded-full flex items-center justify-center flex-shrink-0">
+                    <feature.icon className="w-2 h-2 text-orange-600" />
                   </div>
-                </motion.div>
-              ))}
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+                  <span className="text-gray-600 font-medium text-xs">{feature.text}</span>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </motion.div>
+      )}
     </div>
   );
 } 
